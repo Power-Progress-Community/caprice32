@@ -1,16 +1,6 @@
-![Caprice32 logo](https://raw.githubusercontent.com/ColinPitrat/caprice32/master/resources/cap32logo.bmp)
-# Caprice32 - Amstrad CPC Emulator
+# Caprice32 - Amstrad CPC Emulator PPC64 port
 
-(c) Copyright 1997-2015 Ulrich Doewich
-
-(c) Copyright 2016-2019 Colin Pitrat
-
-https://github.com/ColinPitrat/caprice32
-
-Linux build: [![Linux build Status](https://travis-ci.org/ColinPitrat/caprice32.svg?branch=master)](https://travis-ci.org/ColinPitrat/caprice32)
-
-Windows build: [![Windows build status](https://ci.appveyor.com/api/projects/status/h795wt2xlttaj6sk?svg=true)](https://ci.appveyor.com/project/ColinPitrat/caprice32)
-
+Link to the original Caprice32 source code https://github.com/ColinPitrat/caprice32
 
 # What is it ?
 
@@ -37,88 +27,4 @@ You see something missing ? Do not hesitate to open an issue to suggest it.
 
 # Installation
 
-## Linux
-
-### Debug behavior and release behavior when locating configuration file
-
-If you compile Caprice32 yourself with plain make, behavior is
-debug-oriented.  By default at run-time it will look for `cap32.cfg`
-in the *current directory of the process* that launches it, not in the
-executable location as stated in the documentation.  To get the
-documented behavior, use `APP_PATH` like in the examples below.
-
-### From Git
-
-```
-git clone https://github.com/ColinPitrat/caprice32.git
-cd caprice32
-make APP_PATH="$PWD"
-./cap32
-```
-
-### From releases
-
-Download a release from https://github.com/ColinPitrat/caprice32/releases.
-Decompress it and then from a terminal in the resulting directory:
-
-```
-make APP_PATH="$PWD"
-./cap32
-```
-
-### Snap
-
-A SNAP (maintained by a third party) is available at https://snapcraft.io/caprice32.
-
-## Windows
-
-Download a release from https://github.com/ColinPitrat/caprice32/releases.
-Decompress it and double click on cap32.exe
-
-# Basic usage
-
-See the [manual page](http://htmlpreview.github.io/?https://github.com/ColinPitrat/caprice32/blob/master/doc/man.html) for more details. If you are really lost, you can simply invoke the emulator without any argument, then press F1 to get the in-emulator menu.
-
-# Help needed
-
-Maintaining Caprice is a lot of work and you can help with it.
-You can:
-  * Use it, show it, talk and write about it
-  * Thank the maintainer
-  * Report any bug or missing feature
-  * Write some documentation
-  * Package it for your favourite distribution (if not yet available)
-  * Port it to iOS so that Mac users can enjoy it too
-
-# Supporting
-
-You can support me on Liberapay:
-
-[<img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg">](https://liberapay.com/ColinPitrat/donate)
-
-# Building and compiling
-
-See the [INSTALL.md](INSTALL.md) files for Caprice32 build instructions.
-
-# Using the source
-
-The source for Caprice32 is distributed under the terms of the GNU General Public License version 2 (GPLv2), which is included in this archive as COPYING.txt. Please make sure that you understand the terms and conditions of the license before using the source.
-
-The screen dump part of Caprice32 uses [driedfruit SDL_SavePNG](https://github.com/driedfruit/SDL_SavePNG) code, released under zlib/libpng license, which is compatible with GPLv2.
-
-I encourage you to get involved in the project.
-
-# Comments or ready to contribute?
-
-If you have suggestions, a bug report or even want to participate to the development, please feel free to open an issue or submit a pull request.
-
-# Why another GitHub repository ?
-
-There are many repositories for caprice32 on GitHub:
-
-  * https://github.com/burzumishi/caprice32
-  * https://github.com/rofl0r/caprice32
-  * https://github.com/MrZammler/caprice32
-  * https://github.com/burzumishi/caprice32wx
-
-So why create another one ? All these repositories are highly inactive. The ones that touched the code added dependencies (wxWidget, GTK) without really adding features.
+from repo.powerprogress.org : apt-get install caprice32

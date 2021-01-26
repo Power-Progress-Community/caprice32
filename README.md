@@ -1,4 +1,4 @@
-# Caprice32 - Amstrad CPC Emulator PPC64 port
+# Caprice32 - Amstrad CPC Emulator (PPC64)
 
 Link to the original Caprice32 source code https://github.com/ColinPitrat/caprice32
 

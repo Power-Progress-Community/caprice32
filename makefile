@@ -108,7 +108,7 @@ TEST_OBJECTS:=$(TEST_DEPENDS:.d=.o)
 WARNINGS = -Wall -Wextra -Wzero-as-null-pointer-constant -Wformat=2 -Wold-style-cast -Wmissing-include-dirs -Wlogical-op -Woverloaded-virtual -Wpointer-arith -Wredundant-decls
 COMMON_CFLAGS += $(CFLAGS) -std=c++17 $(IPATHS)
 DEBUG_FLAGS = -Werror -g -O0 -DDEBUG
-RELEASE_FLAGS = -O2 -funroll-loops -ffast-math -fomit-frame-pointer -fno-strength-reduce -finline-functions -s
+RELEASE_FLAGS = -funroll-loops -ffast-math -fomit-frame-pointer -fno-strength-reduce -finline-functions -s
 BUILD_FLAGS = $(RELEASE_FLAGS)
 
 debug: BUILD_FLAGS:=$(DEBUG_FLAGS)
@@ -220,10 +220,10 @@ distrib: $(TARGET)
 install: $(TARGET)
 	install -D $(TARGET) $(DESTDIR)$(prefix)/bin/$(TARGET)
 	install -D $(GROFF_DOC) $(DESTDIR)$(prefix)/share/man/man6/cap32.6
-	install -D -m664 cap32.cfg.tmpl $(DESTDIR)/etc/cap32.cfg
-	sed -i "s,__SHARE_PATH__,$(DESTDIR)$(prefix)/share/caprice32," $(DESTDIR)/etc/cap32.cfg
 	mkdir -p $(DESTDIR)$(prefix)/share/caprice32
 	cp -r resources rom $(DESTDIR)$(prefix)/share/caprice32
+	install -D -m666 cap32.cfg.tmpl $(DESTDIR)$(prefix)/share/caprice32/etc/cap32.cfg
+	sed -i "s,__SHARE_PATH__,$(prefix)/share/caprice32," $(DESTDIR)$(prefix)/share/caprice32/etc/cap32.cfg
 endif
 
 ####################################

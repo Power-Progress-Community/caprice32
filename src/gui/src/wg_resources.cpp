@@ -187,7 +187,12 @@ CwgBitmapResourceHandle::CwgBitmapResourceHandle(EwgResourceId resId) :
 SDL_Surface* CwgBitmapResourceHandle::DrawBitmap(CRGBColor Data[], int iDataLength, int iWidth, int iHeight) const
 {
 	SDL_Surface* pBitmap = SDL_CreateRGBSurface(SDL_SWSURFACE | SDL_SRCALPHA, iWidth, iHeight, 
-		CApplication::Instance()->GetBitsPerPixel(), 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
+		#ifdef __powerpc64__
+		 CApplication::Instance()->GetBitsPerPixel(),   0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff);
+		#else
+		 CApplication::Instance()->GetBitsPerPixel(), 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
+		#endif
+		
 	CPainter Painter(pBitmap, CPainter::PAINT_REPLACE);
 	for (int iRow = 0; iRow < iHeight; ++iRow)
 	{

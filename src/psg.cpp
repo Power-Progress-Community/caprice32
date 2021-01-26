@@ -47,8 +47,14 @@ int Level_PP[256];
 
 union TLoopCount {
    struct {
+	#ifdef __powerpc64__
+      dword Hi;
+      dword Lo;
+    #else
       dword Lo;
       dword Hi;
+    #endif
+
    };
    int64_t Re;
 } LoopCount;
@@ -60,8 +66,13 @@ void (*Case_EnvType)();
 
 union TCounter {
    struct {
-      word Lo;
-      word Hi;
+	#ifdef __powerpc64__
+      dword Hi;
+      dword Lo;
+    #else
+      dword Lo;
+      dword Hi;
+    #endif
    };
    dword Re;
 };
@@ -69,16 +80,26 @@ TCounter Ton_Counter_A, Ton_Counter_B, Ton_Counter_C, Noise_Counter;
 
 union TNoise {
    struct {
+	#ifdef __powerpc64__
+      word Val;
+      word Low;
+    #else
       word Low;
       word Val;
+    #endif
    };
    dword Seed;
 } Noise;
 
 union TEnvelopeCounter {
    struct {
+	#ifdef __powerpc64__
+      dword Hi;
+      dword Lo;
+    #else
       dword Lo;
       dword Hi;
+    #endif
    };
    int64_t Re;
 } Envelope_Counter;
@@ -326,21 +347,37 @@ void SetAYRegister(int Num, byte Value)
 inline void Synthesizer_Logic_Q()
 {
    Ton_Counter_A.Hi++;
-   if (Ton_Counter_A.Hi >= PSG.RegisterAY.TonA) {
+	//rt1k
+   #ifdef __powerpc64__
+	if (Ton_Counter_A.Hi >= ((uint16_t) (PSG.RegisterAY.TonALo + (PSG.RegisterAY.TonAHi<<8)))) {
+   #else
+    if (Ton_Counter_A.Hi >= PSG.RegisterAY.TonA) {
+   #endif
       Ton_Counter_A.Hi = 0;
       Ton_A ^= 1;
    }
    Ton_Counter_B.Hi++;
-   if (Ton_Counter_B.Hi >= PSG.RegisterAY.TonB) {
+
+   #ifdef __powerpc64__
+	if (Ton_Counter_B.Hi >= ((uint16_t) (PSG.RegisterAY.TonBLo + (PSG.RegisterAY.TonBHi<<8)))) {
+   #else
+    if (Ton_Counter_B.Hi >= PSG.RegisterAY.TonB) {
+   #endif
       Ton_Counter_B.Hi = 0;
       Ton_B ^= 1;
    }
    Ton_Counter_C.Hi++;
-   if (Ton_Counter_C.Hi >= PSG.RegisterAY.TonC) {
+
+   #ifdef __powerpc64__
+    if (Ton_Counter_C.Hi >= ((uint16_t) (PSG.RegisterAY.TonCLo + (PSG.RegisterAY.TonCHi<<8)))) {
+   #else
+    if (Ton_Counter_C.Hi >= PSG.RegisterAY.TonC) {
+   #endif    
       Ton_Counter_C.Hi = 0;
       Ton_C ^= 1;
    }
    Noise_Counter.Hi++;
+
    if ((!(Noise_Counter.Hi & 1)) && (Noise_Counter.Hi >= (PSG.RegisterAY.Noise << 1))) {
       Noise_Counter.Hi = 0;
       Noise.Seed = (((((Noise.Seed >> 13) ^ (Noise.Seed >> 16)) & 1) ^ 1) | Noise.Seed << 1) & 0x1ffff;
@@ -349,7 +386,13 @@ inline void Synthesizer_Logic_Q()
       Case_EnvType();
    }
    Envelope_Counter.Hi++;
-   if (Envelope_Counter.Hi >= PSG.RegisterAY.Envelope) {
+
+   //rt1k
+   #ifdef __powerpc64__
+    if (Envelope_Counter.Hi >= ((uint16_t) (PSG.RegisterAY.EnvelopeLo + (PSG.RegisterAY.EnvelopeHi<<8)))) {
+   #else
+    if (Envelope_Counter.Hi >= PSG.RegisterAY.Envelope) {
+   #endif
       Envelope_Counter.Hi = 0;
    }
 }
@@ -367,7 +410,11 @@ inline void Synthesizer_Mixer_Q()
 
    LevR = LevL;
    if (Ton_EnA) {
-      if ((!Envelope_EnA) || (PSG.RegisterAY.TonA > 4)) {
+	  #ifdef __powerpc64__
+	   if ((!Envelope_EnA) || (((uint16_t) (PSG.RegisterAY.TonALo + (PSG.RegisterAY.TonAHi<<8))) > 4)) {
+      #else
+       if ((!Envelope_EnA) || (PSG.RegisterAY.TonA > 4)) {
+      #endif
          k = Ton_A;
       }
       else {
@@ -392,7 +439,11 @@ inline void Synthesizer_Mixer_Q()
    }
 
    if (Ton_EnB) {
-      if ((!Envelope_EnB) || (PSG.RegisterAY.TonB > 4)) {
+	  #ifdef __powerpc64__
+	   if ((!Envelope_EnB) || (((uint16_t) (PSG.RegisterAY.TonBLo + (PSG.RegisterAY.TonBHi<<8))) > 4)) {
+      #else
+       if ((!Envelope_EnB) || (PSG.RegisterAY.TonB > 4)) {
+	  #endif
          k = Ton_B;
       }
       else {
@@ -417,7 +468,11 @@ inline void Synthesizer_Mixer_Q()
    }
 
    if (Ton_EnC) {
-      if ((!Envelope_EnC) || (PSG.RegisterAY.TonC > 4)) {
+	  #ifdef __powerpc64__
+	   if ((!Envelope_EnC) || (((uint16_t) (PSG.RegisterAY.TonCLo + (PSG.RegisterAY.TonCHi<<8))) > 4)) {
+      #else
+       if ((!Envelope_EnC) || (PSG.RegisterAY.TonC > 4)) {
+      #endif
          k = Ton_C;
       }
       else {

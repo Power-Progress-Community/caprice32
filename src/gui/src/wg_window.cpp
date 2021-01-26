@@ -99,7 +99,11 @@ void CWindow::SetWindowRect(const CRect& WindowRect)
 	if (m_pSDLSurface)
 		SDL_FreeSurface(m_pSDLSurface);
 	m_pSDLSurface = SDL_CreateRGBSurface(SDL_SWSURFACE, m_WindowRect.Width(), m_WindowRect.Height(),
-		CApplication::Instance()->GetBitsPerPixel(), 0x000000FF, 0x0000FF00, 0x00FF0000, /*0xFF000000*/ 0);
+		#ifdef __powerpc64__
+		 CApplication::Instance()->GetBitsPerPixel(), 0xff000000, 0x00ff0000, 0x0000ff00, /*0xFF000000*/ 0);
+		#else
+		 CApplication::Instance()->GetBitsPerPixel(), 0x000000FF, 0x0000FF00, 0x00FF0000, /*0xFF000000*/ 0);
+		#endif
 	if (!m_pSDLSurface)
 	{
 		CApplication::Instance()->GetApplicationLog().AddLogEntry(std::string("SDL Unable To Create Surface: ") + SDL_GetError(), APP_LOG_ERROR);

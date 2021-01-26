@@ -211,8 +211,13 @@ typedef struct {
    unsigned char *snd_bufferptr;
    union {
       struct {
-         unsigned int low;
-         unsigned int high;
+		 #ifdef __powerpc64__
+		 	unsigned int high;
+         	unsigned int low;
+         #else
+         	unsigned int low;
+            unsigned int high;
+		 #endif
       };
       int64_t both;
    } snd_cycle_count_init;
@@ -337,8 +342,13 @@ typedef struct {
 typedef struct {
    union {
       struct {
-         unsigned int low;
-         unsigned int high;
+		 #ifdef __powerpc64__
+	         unsigned int high;
+	         unsigned int low;
+	     #else
+         	 unsigned int low;
+ 			 unsigned int high;
+ 		 #endif
       };
       int64_t both;
    } cycle_count;

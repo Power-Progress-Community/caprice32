@@ -53,6 +53,22 @@ extern FILE *pfoDebug;
 #define MIN_VHOLD_RANGE 46
 #define MAX_VHOLD_RANGE 74
 
+#ifdef __powerpc64__
+static inline uint16_t SWAP16(uint16_t x)
+{
+  return ((x & 0x00ff) << 8) |
+         ((x & 0xff00) >> 8);
+}
+
+static inline uint32_t SWAP32(uint32_t x)
+{
+  return ((x & 0x000000ff) << 24) |
+         ((x & 0x0000ff00) <<  8) |
+         ((x & 0x00ff0000) >>  8) |
+         ((x & 0xff000000) >> 24);
+}
+#endif
+
 t_flags1 flags1;
 t_new_dt new_dt;
 
@@ -501,7 +517,12 @@ void update_skew()
    }
 }
 
-
+#ifdef __powerpc64__
+static inline unsigned Swap32(unsigned x)
+{
+   return SWAP32(x);
+}
+#endif
 
 inline void change_mode()
 {
@@ -859,6 +880,7 @@ void prerender_normal_plus()
    int byteOffset = asic.hscroll / 8;
    int byteShift = asic.hscroll % 8;
    unsigned int next_address = CRTC.next_address;
+   
    if(asic.vscroll) {
       if (CRTC.raster_count + asic.vscroll <= CRTC.registers[9]) {
          next_address += asic.vscroll * 0x0800;
@@ -932,7 +954,11 @@ void prerender_normal_half_plus()
 void set_prerender()
 {
    LastPreRend = flags1.combined;
+   #ifdef __powerpc64__
+   if (LastPreRend == 0x0000ff03) {
+   #else
    if (LastPreRend == 0x03ff0000) {
+   #endif
       PreRender = CPC.scr_prerendernorm;
    } else {
       if (!static_cast<word>(LastPreRend)) {
@@ -1330,6 +1356,26 @@ void crtc_cycle(int repeat_count)
 
 void crtc_init()
 {
+#ifdef __powerpc64__
+   static int byte_swapped = 0;
+   if (!byte_swapped) {
+     int j;
+     byte_swapped = 1;
+     for (j = 0; j < 0x200; j++) {
+		M0Map[j] = Swap32(M0Map[j]);
+		M1Map[j] = Swap32(M1Map[j]);
+		M2Map[j] = Swap32(M2Map[j]);
+		M3Map[j] = Swap32(M3Map[j]);
+     }
+     for (j = 0; j < 0x100; j++) {
+		M0hMap[j] = Swap32(M0hMap[j]);
+		M1hMap[j] = Swap32(M1hMap[j]);
+		M2hMap[j] = Swap32(M2hMap[j]);
+		M3hMap[j] = Swap32(M3hMap[j]);
+     }
+   }
+#endif
+   
    if (dwXScale == 1) {
       ModeMaps[0] = M0hMap;
       ModeMaps[1] = M1hMap;

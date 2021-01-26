@@ -1,5 +1,5 @@
-caprice32 (20170601-1) unstable; urgency=low
+caprice32 (4.6.0-1) unstable; urgency=low
 
-  * Modification of installation path in code and cfg file
+  * Code chnaged to support big edian PowerPC64 architecture
 
- -- Seb Haezebrouck <seb@zyglute.fr>  Thu, 01 Jun 2017 17:22:07 +0200
+ -- Roberto Guardato <team@powerprogress.org>  Mon, 19 Jan 2021 15:00:01 +0100

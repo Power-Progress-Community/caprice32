@@ -1291,7 +1291,13 @@ int audio_init ()
    obtained = static_cast<SDL_AudioSpec *>(malloc(sizeof(SDL_AudioSpec)));
 
    desired->freq = freq_table[CPC.snd_playback_rate];
-   desired->format = CPC.snd_bits ? AUDIO_S16LSB : AUDIO_S8;
+
+   #ifdef __powerpc64__
+   	desired->format = CPC.snd_bits ? AUDIO_S16MSB : AUDIO_S8;
+   #else
+   	desired->format = CPC.snd_bits ? AUDIO_S16LSB : AUDIO_S8;
+   #endif
+
    desired->channels = CPC.snd_stereo+1;
    desired->samples = audio_align_samples(desired->freq * FRAME_PERIOD_MS / 1000);
    desired->callback = audio_update;

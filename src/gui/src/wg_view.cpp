@@ -189,7 +189,11 @@ bool CView::HandleMessage(CMessage* pMessage)
 			if (pMessage->Destination() == this || pMessage->Destination() == nullptr)
 			{
 				vid_plugin->lock();
-				SDL_Surface* pFloatingSurface = SDL_CreateRGBSurface(SDL_SWSURFACE, m_pScreenSurface->w, m_pScreenSurface->h, CApplication::Instance()->GetBitsPerPixel(), 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
+				#ifdef __powerpc64__
+				SDL_Surface* pFloatingSurface = SDL_CreateRGBSurface(SDL_SWSURFACE, m_pScreenSurface->w, m_pScreenSurface->h, CApplication::Instance()->GetBitsPerPixel(),   0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff);
+				#else
+				SDL_Surface* pFloatingSurface = SDL_CreateRGBSurface(SDL_SWSURFACE, m_pScreenSurface->w, m_pScreenSurface->h, CApplication::Instance()->GetBitsPerPixel(),   0x000000ff, 0x0000ff00, 0x00ff0000, 0xFF000000);
+				#endif
 				PaintToSurface(*m_pScreenSurface, *pFloatingSurface, CPoint(0, 0));
 				// judb use entire application SDL surface (otherwise strange clipping effects occur
 				// when moving frames, also clipping of listboxes.)
